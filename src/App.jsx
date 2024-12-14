@@ -13,7 +13,6 @@ import boogieMp3 from "./assets/boogie.mp3";
 import sheeshMp3 from "./assets/sheesh.mp3";
 import vineBoomMp3 from "./assets/boom.mp3";
 
-
 // Pekeng pera
 
 import twenty from "./assets/twenty.png";
@@ -267,8 +266,7 @@ function App() {
             >
               Pattern Checker (AFL)
             </h1>
-            <h2>click the rainbow</h2>
-
+            <p className="text-center text-gray-600 mb-4">Click the rainbow</p>
             <button
               onClick={toggleRainbow}
               className="absolute top-2 right-2 p-2 rounded-full hover:bg-gray-100/50 transition-colors"
