@@ -341,22 +341,22 @@ function App() {
               >
                 Even A
               </span>
-              <button
+               <button
                 onClick={toggleMode}
                 className="relative inline-flex items-center h-7 rounded-full w-14 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                style={{
-                  backgroundColor: mode === "template" ? "#818CF8" : "#E2E8F0",
-                }}
+                 style={{
+                   backgroundColor: mode === "evenA" ? "#E2E8F0" : "#818CF8",
+                 }}
               >
                 <span
                   className={`inline-block w-5 h-5 transform transition-transform duration-300 bg-white rounded-full shadow-md ${
-                    mode === "template" ? "translate-x-8" : "translate-x-1"
-                  }`}
+                     mode === "evenA" ? "translate-x-1" : "translate-x-8"
+                   }`}
                 />
               </button>
               <span
                 className={`ml-2 transition-colors duration-300 ${
-                  mode === "template"
+                  mode === "logicMoDitoJil"
                     ? "font-semibold text-indigo-600"
                     : "text-gray-500"
                 }`}
