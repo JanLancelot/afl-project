@@ -134,7 +134,7 @@ function App() {
   function toggleMode() {
     setBonkEffect(true);
     setTimeout(() => setBonkEffect(false), 300);
-    const newMode = mode === "evenA" ? "template" : "evenA";
+    const newMode = mode === "evenA" ? "logicMoDitoJil" : "evenA";
     setMode(newMode);
     checkPattern(text, newMode);
   }
