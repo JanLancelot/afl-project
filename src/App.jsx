@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 // Norman IMG
-
 import neilWacky from "./assets/neil.png";
 import doge from "./assets/doge.png";
 
@@ -9,12 +8,20 @@ import doge from "./assets/doge.png";
 import danceGif from "./assets/dance.gif";
 import budotsGif from "./assets/budots.gif";
 import discoBall from "./assets/discoBall.gif";
+
+// Boogie Dancers
+import skellyGif from "./assets/skellyDance.gif";
+import boogieDance from "./assets/boogieDance.gif";
+import yellowDance from "./assets/yellowDance.gif";
+import catBop from "./assets/catDance.gif";
+import spongebobDance from "./assets/spongebobDance.gif";
+
+// Sounds
 import boogieMp3 from "./assets/boogie.mp3";
 import sheeshMp3 from "./assets/sheesh.mp3";
 import vineBoomMp3 from "./assets/boom.mp3";
 
 // Pekeng pera
-
 import twenty from "./assets/twenty.png";
 import fifty from "./assets/fifty.png";
 import oneHundred from "./assets/oneHundred.png";
@@ -36,6 +43,14 @@ function App() {
   const [showNeil, setShowNeil] = useState(false);
   const [discoBuildUp, setDiscoBuildUp] = useState(0);
   const [discoMode, setDiscoMode] = useState(false);
+  const [dancers, setDancers] = useState([]);
+  const newDancerGifs = [
+    skellyGif,
+    boogieDance,
+    yellowDance,
+    catBop,
+    spongebobDance,
+  ];
 
   useEffect(() => {
     if (rainbowMode) {
@@ -47,15 +62,22 @@ function App() {
         setDiscoMode(true);
       }, 15000);
 
+      const timerForDancers = setTimeout(() => {
+        setDancers(newDancerGifs);
+      }, 15000);
+
       return () => {
         clearInterval(buildUpInterval);
         clearTimeout(discoTimer);
+        clearTimeout(timerForDancers);
         setDiscoBuildUp(0);
         setDiscoMode(false);
+        setDancers([]);
       };
     } else {
       setDiscoBuildUp(0);
       setDiscoMode(false);
+      setDancers([]);
     }
   }, [rainbowMode]);
 
@@ -150,17 +172,32 @@ function App() {
 
   function createFloatingElements() {
     if (!rainbowMode) return null;
-
-    const emojis = ["😂", "💀", "🗿", "🅱️", "👌", "💯", "🔥", "⭐"];
-    const moneyImages = [
-      twenty,
-      fifty,
-      oneHundred,
-      twoHundred,
-      fiveHundred,
-      oneThousand,
-    ];
+  
     const elements = [];
+    
+    const emojis = ["😂", "💀", "🗿", "🅱️", "👌", "💯", "🔥", "⭐"];
+    const moneyImages = [twenty, fifty, oneHundred, twoHundred, fiveHundred, oneThousand];
+    
+    if (discoMode) {
+      const dancers = [
+        { src: skellyGif, position: 'top-left' },
+        { src: boogieDance, position: 'top-right' },
+        { src: yellowDance, position: 'bottom-left' },
+        { src: catBop, position: 'bottom-right' },
+        { src: spongebobDance, position: 'center' }
+      ];
+  
+      dancers.forEach((dancer, index) => {
+        elements.push(
+          <div
+            key={`dancer-${index}`}
+            className={`dancer-container ${dancer.position} ${discoMode ? 'visible' : ''}`}
+          >
+            <img src={dancer.src} alt={`Dancing ${index}`} />
+          </div>
+        );
+      });
+    }
 
     for (let i = 0; i < 20; i++) {
       const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
@@ -213,9 +250,27 @@ function App() {
     return elements;
   }
 
+  function renderDancers() {
+    if (!discoMode) return null;
+
+    return dancers.map((gif, index) => (
+      <div
+        key={`new-dancer-${index}`}
+        className="new-dancer"
+        style={{
+          left: `${Math.random() * 90 + 5}vw`,
+          animationDelay: `${Math.random() * 5}s`,
+          top: `${Math.random() * 80}vh`,
+        }}
+      >
+        <img src={gif} alt={`Dancer ${index}`} />
+      </div>
+    ));
+  }
+
   return (
     <div
-      className={`flex flex-col items-center justify-center min-h-screen ${
+      className={`flex flex-col items-center justify-center h-screen overflow-hidden ${
         rainbowMode
           ? "disco-background"
           : "bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100"
@@ -238,6 +293,8 @@ function App() {
               <img src={neilWacky} alt="Neil" />
             </div>
           )}
+
+          {renderDancers()}
 
           {rainbowMode && createFloatingElements()}
 
@@ -340,7 +397,9 @@ function App() {
       <style>
         {`
         /*
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         DO NOT TOUCH! VERY FRAGILE!
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         */
           @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -389,6 +448,13 @@ function App() {
             }
           }
 
+           @keyframes danceNewDancer {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-15px) }
+            100% { transform: translateY(0); }
+          }
+
+
           @keyframes spinDoge {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -424,6 +490,77 @@ function App() {
             background-size: ${discoMode ? "200% 200%" : "400% 400%"};
             animation: ${discoMode ? "discoParty 1s linear infinite" : "none"};
             transition: background 0.3s ease;
+          }
+
+                    .dancer-container {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 45;
+            pointer-events: none;
+          }
+
+          .dancer-container.visible {
+            opacity: 1;
+          }
+
+          .dancer-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+
+          .dancer-container.top-left {
+            top: 20px;
+            left: 20px;
+            animation: danceBounce 1s ease-in-out infinite;
+          }
+
+          .dancer-container.top-right {
+            top: 20px;
+            right: 20px;
+            animation: danceSpin 2s linear infinite;
+          }
+
+          .dancer-container.bottom-left {
+            bottom: 20px;
+            left: 20px;
+            animation: danceWiggle 1.5s ease-in-out infinite;
+          }
+
+          .dancer-container.bottom-right {
+            bottom: 20px;
+            right: 20px;
+            animation: danceBounce 1.2s ease-in-out infinite;
+          }
+
+          .dancer-container.center {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: danceScale 1s ease-in-out infinite;
+          }
+
+          @keyframes danceBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+          }
+
+          @keyframes danceSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+
+          @keyframes danceWiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+          }
+
+          @keyframes danceScale {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
           }
 
           @keyframes discoParty {
@@ -555,6 +692,22 @@ function App() {
             height: 100%;
             object-fit: contain;
           }
+
+           .new-dancer {
+              position: absolute;
+              width: 200px;
+              height: 200px;
+              z-index: 30;
+               animation: danceNewDancer 2s ease-in-out infinite;
+              pointer-events: none;
+            }
+
+           .new-dancer img {
+             width: 100%;
+             height: 100%;
+             object-fit: contain;
+           }
+
 
           .disco-ball {
             position: absolute;
