@@ -134,7 +134,7 @@ function App() {
   function toggleMode() {
     setBonkEffect(true);
     setTimeout(() => setBonkEffect(false), 300);
-    const newMode = mode === "evenA" ? "logicMoDitoJil" : "evenA";
+    const newMode = mode === "evenA" ? "startAWithNoConsecBs" : "evenA";
     setMode(newMode);
     checkPattern(text, newMode);
   }
@@ -150,7 +150,19 @@ function App() {
         setIsMatch(aCount % 2 === 0);
         break;
       }
-      case "logicMoDitoJil": {
+      case "startAWithNoConsecBs": {
+        const lowercaseText = text.toLowerCase();
+        if (!lowercaseText.startsWith('a')) {
+          setIsMatch(false);
+          return;
+        }
+        for (let bCount = 1; bCount < lowercaseText.length; bCount++) {
+          if (lowercaseText[bCount] === 'b' && lowercaseText[bCount-1] === 'b') {
+            setIsMatch(false);
+            return;
+          }
+        }
+        setIsMatch(true);
         break;
       }
       default: {
@@ -165,9 +177,11 @@ function App() {
         ? 'The string has an even number of "a"s.'
         : 'The string does not have an even number of "a"s.';
     }
-    // Lagay ka else if dito Jil for the return messages
-
-    return "Lagay ka din pasabog";
+    else if (mode === "startAWithNoConsecBs") {
+      return isMatch
+      ? "The string starts with A and is not followed by consecutive B's."
+      : "The string does not satisfy any of the instructions."
+    }
   }
 
   function createFloatingElements() {
@@ -276,7 +290,7 @@ function App() {
           : "bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100"
       }`}
     >
-      <div className="w-full max-w-md px-6">
+      <div className="w-full max-w-md px-1">
         <div className="relative">
           {rainbowMode && (
             <>
