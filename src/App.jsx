@@ -375,7 +375,7 @@ function App() {
                     : "text-gray-500"
                 }`}
               >
-                Case mo dito Jil
+                Start with A, no consecutive B's
               </span>
             </div>
 
